@@ -64,7 +64,7 @@ const Footer = () => {
           {/* Download App */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="font-medium mb-4">Download App</h3>
-            <p className="text-gray-400 text-xs mb-3">Save $3 with App New User Only</p>
+            <p className="text-gray-400 text-xs mb-3">Save $3 for App New User Only</p>
             <div className="flex gap-2">
               <Link href="#" className="relative w-[120px] h-[36px] shrink-0">
                 <Image src="/images/google-play.png" alt="Google Play" fill className="object-contain" />
