@@ -9,10 +9,10 @@ import { FaLinkedinIn } from 'react-icons/fa';
 const Footer = () => {
   return (
     <footer className="bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6">
           {/* Exclusive */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="text-xl font-bold mb-4">Exclusive</h3>
             <p className="text-sm font-medium mb-3">Subscribe</p>
             <p className="text-gray-400 text-sm mb-4">Get 10% off your first order</p>
@@ -62,12 +62,16 @@ const Footer = () => {
           </div>
 
           {/* Download App */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="font-medium mb-4">Download App</h3>
             <p className="text-gray-400 text-xs mb-3">Save $3 with App New User Only</p>
             <div className="flex gap-2">
-              <Image src="/images/google-play.png" alt="Google Play" width={110} height={40} className="object-contain" />
-              <Image src="/images/dl.beatsnoop 1.png" alt="App Store" width={110} height={40} className="object-contain" />
+              <Link href="#" className="relative w-[120px] h-[36px] shrink-0">
+                <Image src="/images/google-play.png" alt="Google Play" fill className="object-contain" />
+              </Link>
+              <Link href="#" className="relative w-[120px] h-[36px] shrink-0">
+                <Image src="/images/app-store.svg" alt="App Store" fill className="object-contain" />
+              </Link>
             </div>
             <div className="flex items-center gap-4 mt-5 text-xl">
               <Link href="#" className="text-gray-400 hover:text-white transition"><TiSocialFacebook /></Link>

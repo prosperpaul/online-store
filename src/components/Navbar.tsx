@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoIosSearch, IoMdClose } from 'react-icons/io';
-import { HiOutlineMenuAlt3 } from 'react-icons/hi';
+import { RiMenu4Line } from 'react-icons/ri';
 import Navicons from './Navicons';
 
 const navLinks = [
@@ -17,6 +17,18 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState('');
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   return (
     <header className="bg-white text-black sticky top-0 z-50 border-b border-gray-100">
@@ -69,44 +81,71 @@ const Navbar = () => {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden text-2xl"
+              className="lg:hidden text-2xl p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
             >
-              {mobileOpen ? <IoMdClose /> : <HiOutlineMenuAlt3 />}
+              {mobileOpen ? <IoMdClose /> : <RiMenu4Line />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-          <div className="px-4 py-3">
-            <div className="flex items-center bg-gray-100 rounded-lg px-4 py-2 gap-2 mb-4 md:hidden">
-              <input
-                type="text"
-                placeholder="What are you looking for?"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="bg-transparent outline-none text-sm flex-1"
-              />
-              <IoIosSearch className="text-xl text-gray-500" />
-            </div>
-            <nav className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="py-3 px-2 text-sm font-medium hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+      {/* Mobile overlay */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 lg:hidden ${
+          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        style={{ top: 0 }}
+        onClick={() => setMobileOpen(false)}
+      />
+
+      {/* Mobile slide-in menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${
+          mobileOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Menu header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <span className="text-lg font-bold">Menu</span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-xl"
+            aria-label="Close menu"
+          >
+            <IoMdClose />
+          </button>
+        </div>
+
+        {/* Mobile search */}
+        <div className="px-5 pt-4 md:hidden">
+          <div className="flex items-center bg-gray-100 rounded-lg px-4 py-2.5 gap-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-transparent outline-none text-sm flex-1"
+            />
+            <IoIosSearch className="text-xl text-gray-500" />
           </div>
         </div>
-      )}
+
+        {/* Nav links */}
+        <nav className="flex flex-col px-3 pt-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className="py-3 px-4 text-sm font-medium hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 };
