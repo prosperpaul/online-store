@@ -33,7 +33,7 @@ export default function CartPage() {
         alert(data.error || 'Checkout failed');
         setLoading(false);
       }
-    } catch (err) {
+    } catch {
       alert('Something went wrong. Please try again.');
       setLoading(false);
     }
