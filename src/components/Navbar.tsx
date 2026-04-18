@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { IoIosSearch, IoMdClose } from 'react-icons/io';
 import { RiMenu4Line } from 'react-icons/ri';
 import Navicons from './Navicons';
@@ -15,8 +16,17 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = search.trim();
+    if (!q) return;
+    setMobileOpen(false);
+    router.push(`/products?search=${encodeURIComponent(q)}`);
+  };
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -66,7 +76,7 @@ const Navbar = () => {
           {/* Search + Icons */}
           <div className="flex items-center gap-4">
             {/* Search bar - desktop */}
-            <div className="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2 gap-2">
+            <form onSubmit={handleSearch} className="hidden md:flex items-center bg-gray-100 rounded-lg px-4 py-2 gap-2">
               <input
                 type="text"
                 placeholder="What are you looking for?"
@@ -74,8 +84,10 @@ const Navbar = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 className="bg-transparent outline-none text-sm w-48 lg:w-56"
               />
-              <IoIosSearch className="text-xl text-gray-500" />
-            </div>
+              <button type="submit" aria-label="Search" className="text-gray-500 hover:text-black transition">
+                <IoIosSearch className="text-xl" />
+              </button>
+            </form>
 
             <Navicons />
 
@@ -120,7 +132,7 @@ const Navbar = () => {
 
         {/* Mobile search */}
         <div className="px-5 pt-4 md:hidden">
-          <div className="flex items-center bg-gray-100 rounded-lg px-4 py-2.5 gap-2">
+          <form onSubmit={handleSearch} className="flex items-center bg-gray-100 rounded-lg px-4 py-2.5 gap-2">
             <input
               type="text"
               placeholder="Search..."
@@ -128,8 +140,10 @@ const Navbar = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent outline-none text-sm flex-1"
             />
-            <IoIosSearch className="text-xl text-gray-500" />
-          </div>
+            <button type="submit" aria-label="Search" className="text-gray-500 hover:text-black transition">
+              <IoIosSearch className="text-xl" />
+            </button>
+          </form>
         </div>
 
         {/* Nav links */}

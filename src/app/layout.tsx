@@ -3,6 +3,7 @@ import './globals.css';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { CartProvider } from '../context/CartContext';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   title: 'Exclusive - Premium Online Store',
@@ -15,14 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col">
-        <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CartProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className="min-h-screen flex flex-col">
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

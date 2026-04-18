@@ -1,20 +1,29 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useCart } from '../../context/CartContext';
-import { products } from '../../data/products';
+import type { Product } from '../../types/product';
 import ProductCard from '../../components/ProductCard';
 
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist, addToCart } = useCart();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then((r) => r.json())
+      .then(setAllProducts)
+      .catch(() => setAllProducts([]));
+  }, []);
 
   const handleMoveAllToBag = () => {
     wishlist.forEach((item) => addToCart(item));
   };
 
-  const recommendedProducts = products
+  const recommendedProducts = allProducts
     .filter((p) => !wishlist.find((w) => w.id === p.id))
     .slice(0, 4);
 

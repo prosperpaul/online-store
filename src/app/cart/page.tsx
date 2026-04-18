@@ -2,11 +2,42 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { IoClose } from 'react-icons/io5';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+        }),
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Checkout failed');
+        setLoading(false);
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -131,12 +162,13 @@ export default function CartPage() {
                 <span>${total}</span>
               </div>
             </div>
-            <Link
-              href="/checkout"
-              className="btn-primary block text-center w-full mt-6"
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="btn-primary block text-center w-full mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Proceed to Checkout
-            </Link>
+              {loading ? 'Redirecting...' : 'Proceed to Checkout'}
+            </button>
             {subtotal < 500 && (
               <p className="text-xs text-gray-400 mt-3 text-center">
                 Add ${500 - subtotal} more for free shipping
